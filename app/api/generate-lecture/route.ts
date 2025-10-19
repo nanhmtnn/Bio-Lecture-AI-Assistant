@@ -3,11 +3,32 @@ import { ai } from "@/lib/gemini";
 
 export async function POST(req: Request) {
   try {
+    // const { bigTopic, subtopics, outputMode } = await req.json();
+
+    // if (!bigTopic) {
+    //   return NextResponse.json({ error: "Missing topic" }, { status: 400 });
+    // }
+
+    // Try to make it work -----------------
     const { bigTopic, subtopics, outputMode } = await req.json();
 
-    if (!bigTopic) {
-      return NextResponse.json({ error: "Missing topic" }, { status: 400 });
+    if (!bigTopic?.trim()) {
+      return NextResponse.json(
+        { error: "Topic is required" }, 
+        { status: 400 }
+      );
     }
+
+    // Validate input length
+    if (bigTopic.length > 200) {
+      return NextResponse.json(
+        { error: "Topic too long. Maximum 200 characters." },
+        { status: 400 }
+      );
+    }
+
+    // ------------------------------------
+
 
     const prompt = `
 Role:
@@ -120,7 +141,7 @@ Now generate the guide for this project using the variables above and return onl
 `;
 
     const response: any = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: "gemini-2.5-flash",
       contents: prompt,
     });
 

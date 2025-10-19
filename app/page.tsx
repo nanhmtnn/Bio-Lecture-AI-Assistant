@@ -43,27 +43,128 @@ export default function LectureGeneratorPage() {
     setTheme(currentTheme => (currentTheme === 'dark' ? 'light' : 'dark'));
   };
 
-  const handleSubmit = async () => {
-    if (!bigTopic.trim()) return;
+  // const handleSubmit = async () => {
+  //   if (!bigTopic.trim()) return;
     
-    setLoading(true);
-    setResult(null);
+  //   setLoading(true);
+  //   setResult(null);
 
-    try {
-      const res = await fetch("/api/generate-lecture", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bigTopic, subtopics, outputMode: mode }),
-      });
+  //   try {
+  //     const res = await fetch("/api/generate-lecture", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ bigTopic, subtopics, outputMode: mode }),
+  //     });
 
-      const data = await res.json();
-      setResult(data);
-    } catch (error) {
-      console.error("Failed to generate lecture:", error);
-    } finally {
-      setLoading(false);
+  //     const data = await res.json();
+  //     setResult(data);
+  //   } catch (error) {
+  //     console.error("Failed to generate lecture:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // In your handleSubmit function:
+const handleSubmit = async () => {
+  if (!bigTopic.trim()) {
+    alert("Please enter a topic");
+    return;
+  }
+
+  setLoading(true);
+  setResult(null);
+
+  try {
+    const res = await fetch("/api/generate-lecture", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 
+        bigTopic: bigTopic.trim(), 
+        subtopics: subtopics.trim(), 
+        outputMode: mode 
+      }),
+    });
+
+    const data = await res.json();
+    
+    if (!res.ok) {
+      throw new Error(data.error || `Request failed with status ${res.status}`);
     }
-  };
+    
+    if (data.warning) {
+      // Handle JSON parsing warnings
+      console.warn("JSON parsing warning:", data);
+      setResult(data);
+    } else if (data.error) {
+      throw new Error(data.error);
+    } else {
+      setResult(data);
+    }
+  } catch (error: any) {
+    console.error("Submission error:", error);
+    setResult({ 
+      warning: true,
+      errorMessage: error.message || "Failed to generate lecture. Please try again.",
+      suggestion: "Try using a simpler topic or check your internet connection."
+    });
+  } finally {
+    setLoading(false);
+  }
+};
+
+// Enhanced error display in your JSX:
+{result?.warning && (
+  <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-6">
+    <div className="flex items-center space-x-2 text-yellow-700 dark:text-yellow-300 mb-3">
+      <span className="text-lg">⚠️</span>
+      <h3 className="font-semibold">Format Issue</h3>
+    </div>
+    
+    {result.errorMessage ? (
+      // API Error
+      <div>
+        <p className="text-yellow-600 dark:text-yellow-400 text-sm mb-2">
+          {result.errorMessage}
+        </p>
+        {result.suggestion && (
+          <p className="text-yellow-500 dark:text-yellow-500 text-xs">
+            {result.suggestion}
+          </p>
+        )}
+      </div>
+    ) : (
+      // JSON Parsing Warning
+      <div>
+        <p className="text-yellow-600 dark:text-yellow-400 text-sm mb-3">
+          The response format was unexpected, but we retrieved some content.
+        </p>
+        {result.raw_output && (
+          <details className="text-xs">
+            <summary className="cursor-pointer text-yellow-600 dark:text-yellow-400 mb-2">
+              View Raw Response
+            </summary>
+            <pre className="bg-white dark:bg-gray-800 p-3 rounded-lg overflow-x-auto text-yellow-700 dark:text-yellow-300">
+              {typeof result.raw_output === 'string' 
+                ? result.raw_output 
+                : JSON.stringify(result.raw_output, null, 2)
+              }
+            </pre>
+          </details>
+        )}
+      </div>
+    )}
+    
+    <button
+      onClick={handleSubmit}
+      className="mt-3 bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
+    >
+      Try Again
+    </button>
+  </div>
+)}
+
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 dark:from-gray-900 dark:to-blue-950/30 transition-colors duration-300">
