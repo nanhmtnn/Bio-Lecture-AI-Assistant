@@ -26,22 +26,22 @@ export default function LectureGeneratorPage() {
   const [mode, setMode] = useState("standard");
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  // const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
-  useEffect(() => {
-    const root = window.document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-      root.classList.remove('light');
-    } else {
-      root.classList.add('light');
-      root.classList.remove('dark');
-    }
-  }, [theme]);
+  // useEffect(() => {
+  //   const root = window.document.documentElement;
+  //   if (theme === 'dark') {
+  //     root.classList.add('dark');
+  //     root.classList.remove('light');
+  //   } else {
+  //     root.classList.add('light');
+  //     root.classList.remove('dark');
+  //   }
+  // }, [theme]);
 
-  const toggleTheme = () => {
-    setTheme(currentTheme => (currentTheme === 'dark' ? 'light' : 'dark'));
-  };
+  // const toggleTheme = () => {
+  //   setTheme(currentTheme => (currentTheme === 'dark' ? 'light' : 'dark'));
+  // };
 
   // const handleSubmit = async () => {
   //   if (!bigTopic.trim()) return;
@@ -184,13 +184,13 @@ const handleSubmit = async () => {
               </div>
             </div>
             
-            <button
+            {/* <button
               onClick={toggleTheme}
               className="p-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200 hover:scale-105"
               aria-label="Toggle theme"
             >
               {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-            </button>
+            </button> */}
           </div>
         </div>
       </header>
@@ -559,12 +559,12 @@ const handleSubmit = async () => {
           </section>
         )}
 
-        {result?.warning && (
+        {/* {result?.warning && (
           <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6 text-center">
             <p className="text-red-700 dark:text-red-300 font-semibold">⚠️ The model returned invalid JSON</p>
             <p className="text-red-600 dark:text-red-400 text-sm mt-2">Please try generating the lecture again.</p>
           </div>
-        )}
+        )} */}
       </main>
     </div>
   );
