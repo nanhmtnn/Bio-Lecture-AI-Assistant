@@ -22,7 +22,7 @@ const LoadingSpinner = () => (
 
 export default function LectureGeneratorPage() {
   const [bigTopic, setBigTopic] = useState("");
-  const [subtopics, setSubtopics] = useState("");
+  // const [subtopics, setSubtopics] = useState("");
   const [mode, setMode] = useState("standard");
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -81,7 +81,7 @@ const handleSubmit = async () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ 
         bigTopic: bigTopic.trim(), 
-        subtopics: subtopics.trim(), 
+        // subtopics: subtopics.trim(), 
         outputMode: mode 
       }),
     });
@@ -229,7 +229,7 @@ const handleSubmit = async () => {
                 />
               </div>
 
-              <div>
+              {/* <div>
                 <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-3">
                   Subtopics (Optional)
                 </label>
@@ -241,7 +241,7 @@ const handleSubmit = async () => {
                   onChange={(e) => setSubtopics(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
                 />
-              </div>
+              </div> */}
 
               <div>
                 <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-3">
@@ -251,7 +251,7 @@ const handleSubmit = async () => {
                   {[
                     { value: "concise", label: "Concise", desc: "Quick overview" },
                     { value: "standard", label: "Standard", desc: "Balanced detail" },
-                    { value: "expanded", label: "Expanded", desc: "Comprehensive" }
+                    // { value: "expanded", label: "Expanded", desc: "Comprehensive" }
                   ].map((option) => (
                     <button
                       key={option.value}
@@ -395,7 +395,7 @@ const handleSubmit = async () => {
                   {/* Expandable Sections */}
                   <div className="grid md:grid-cols-2 gap-6">
                     {/* Visual Aids */}
-                    {lec.visual_aid_suggestions && lec.visual_aid_suggestions.length > 0 && (
+                    {/* {lec.visual_aid_suggestions && lec.visual_aid_suggestions.length > 0 && (
                       <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-6">
                         <h4 className="flex items-center space-x-2 font-semibold text-gray-900 dark:text-white mb-4">
                           <span className="text-blue-600">🖼️</span>
@@ -414,7 +414,7 @@ const handleSubmit = async () => {
                           ))}
                         </div>
                       </div>
-                    )}
+                    )} */}
 
                     {/* Molecular Structures */}
                     {lec.molecular_structures_and_processes && (
@@ -559,12 +559,12 @@ const handleSubmit = async () => {
           </section>
         )}
 
-        {/* {result?.warning && (
+        {result?.warning && (
           <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6 text-center">
             <p className="text-red-700 dark:text-red-300 font-semibold">⚠️ The model returned invalid JSON</p>
             <p className="text-red-600 dark:text-red-400 text-sm mt-2">Please try generating the lecture again.</p>
           </div>
-        )} */}
+        )}
       </main>
     </div>
   );
